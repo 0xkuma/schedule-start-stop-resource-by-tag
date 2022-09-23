@@ -20,10 +20,18 @@ resource "aws_lambda_function" "schedule_start_stop_resource" {
   }
 }
 
-resource "aws_lambda_permission" "allow_event_bridge" {
-  statement_id  = "AllowExecutionFromCloudWatch"
+resource "aws_lambda_permission" "allow_start_event_bridge" {
+  statement_id  = "AllowStartResourceSchedule"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.schedule_start_stop_resource.function_name
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.schedule_start_resource_rule.arn
+}
+
+resource "aws_lambda_permission" "allow_stop_event_bridge" {
+  statement_id  = "AllowStopResourceSchedule"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.schedule_start_stop_resource.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.schedule_stop_resource_rule.arn
 }
