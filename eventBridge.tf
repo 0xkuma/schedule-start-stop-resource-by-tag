@@ -24,6 +24,6 @@ resource "aws_cloudwatch_event_target" "schedule_stop_resource_target" {
   target_id = "schedule_stop-resource"
   arn       = aws_lambda_function.schedule_start_stop_resource.arn
   input = jsonencode({
-    "job" = "stot"
+    "job" = "stop"
   })
 }
