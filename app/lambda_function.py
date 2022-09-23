@@ -1,6 +1,8 @@
 import boto3
+import pytz
 import datetime
 import resourceController
+import json
 
 resourcegroupstaggingapi = boto3.client('resourcegroupstaggingapi')
 ec2 = boto3.client('ec2')
@@ -12,7 +14,8 @@ def getTodayWeekDay():
 
 # Get current hour
 def getCurrentHour():
-    return str(datetime.datetime.now().hour)
+    hkt = pytz.timezone('Asia/Hong_Kong')
+    return str(datetime.datetime.now(hkt).hour)
 
 #  Check if the resource should be processed in the current week
 def isProcessWeek(weekTag):
@@ -39,7 +42,9 @@ def getResourceByTag(tag, paginationToken=''):
 # |timeSlotStart  |[0 - 23]       |
 # |timeSlotStop   |[0 - 23]       |
 def lambda_handler(event, context):
+  print(json.dumps(event))
   hour = getCurrentHour()
+  print('Current hour: ' + hour)
   resourceList = []
   paginationToken = None
   jobMapping = {
@@ -74,10 +79,12 @@ def lambda_handler(event, context):
   # Start or stop resource
   if jobTag == 'TimeSlotStart':
     if len(ec2InstanceList) > 0:
+      print('Start EC2 instance: ' + str(ec2InstanceList))
       resourceController.startEc2Instace(ec2, ec2InstanceList)
   elif jobTag == 'TimeSlotStop':
     if len(ec2InstanceList) > 0:
+      print('Stop EC2 instance: ' + str(ec2InstanceList))
       resourceController.stopEc2Instace(ec2, ec2InstanceList)
 
 # if __name__ == "__main__":
-#   lambda_handler()
+#   lambda_handler({"job":"start"}, None)
