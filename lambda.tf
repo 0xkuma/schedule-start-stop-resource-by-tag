@@ -10,7 +10,7 @@ resource "null_resource" "zipLambda" {
 resource "aws_lambda_function" "schedule_start_stop_resource" {
   depends_on    = [null_resource.zipLambda]
   function_name = "schedule-start-stop-resource"
-  role          = "arn:aws:iam::066529494542:role/POC-LambdaRole"
+  role          = aws_iam_role.labmda_role.arn
   handler       = "lambda_function.lambda_handler"
   runtime       = "python3.8"
   filename      = "./app/dist/lambda.zip"
