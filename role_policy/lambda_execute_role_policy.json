@@ -8,6 +8,12 @@
       "Resource": "arn:aws:logs:*:*:*"
     },
     {
+      "Sid": "TagResources",
+      "Effect": "Allow",
+      "Action": ["tag:GetResources"],
+      "Resource": "*"
+    },
+    {
       "Sid": "ResourceManagement",
       "Effect": "Allow",
       "Action": ["ec2:StartInstances", "ec2:StopInstances", "ec2:DescribeInstances"],
