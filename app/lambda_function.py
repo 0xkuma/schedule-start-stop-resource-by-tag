@@ -6,16 +6,20 @@ import json
 
 resourcegroupstaggingapi = boto3.client('resourcegroupstaggingapi')
 ec2 = boto3.client('ec2')
-
+rds = boto3.client('rds')
+hkt = pytz.timezone('Asia/Hong_Kong')
 
 # Get today week day
 def getTodayWeekDay():
-    return str(datetime.datetime.today().weekday())
+    week = str(datetime.datetime.now(hkt).isoweekday())
+    print('Today week day: ' + week)
+    return week
 
 # Get current hour
 def getCurrentHour():
-    hkt = pytz.timezone('Asia/Hong_Kong')
-    return str(datetime.datetime.now(hkt).hour)
+    hour = str(datetime.datetime.now(hkt).hour)
+    print('Current hour: ' + hour)
+    return hour
 
 #  Check if the resource should be processed in the current week
 def isProcessWeek(weekTag):
@@ -24,6 +28,7 @@ def isProcessWeek(weekTag):
       week = str(tag['Value'])
       if getTodayWeekDay() in week:
         return True
+  return False
 
 # Get resource by tag
 def getResourceByTag(tag, paginationToken=''):
@@ -31,6 +36,7 @@ def getResourceByTag(tag, paginationToken=''):
       TagFilters=tag,
       ResourceTypeFilters=[
           'ec2:instance',
+          'rds:db',
       ]
   )
   paginationToken = response['PaginationToken'] if 'PaginationToken' in response else ''
@@ -38,13 +44,12 @@ def getResourceByTag(tag, paginationToken=''):
   return paginationToken, resourceTagMappingList
 
 # |_____Tag_______|__Allow Value__|
-# |week           |[0 1 2 3 4 5 6]|
-# |timeSlotStart  |[0 - 23]       |
-# |timeSlotStop   |[0 - 23]       |
+# |Week           |[0 1 2 3 4 5 6]|
+# |TimeSlotStart  |[0 - 23]       |
+# |TimeSlotStop   |[0 - 23]       |
 def lambda_handler(event, context):
   print(json.dumps(event))
   hour = getCurrentHour()
-  print('Current hour: ' + hour)
   resourceList = []
   paginationToken = None
   jobMapping = {
@@ -69,22 +74,31 @@ def lambda_handler(event, context):
 
   # Assign resource id to list
   ec2InstanceList = []
+  rdsInstanceList = []
   for resource in resourceList:
     if isProcessWeek(resource['Tags']):
       resourceArn = resource['ResourceARN']
       resourceType = resourceArn.split(':')[2]
       if resourceType == 'ec2':
         ec2InstanceList.append(resourceArn.split('/')[1])
+      elif resourceType == 'rds':
+        rdsInstanceList.append(resourceArn.split(':')[6])
 
   # Start or stop resource
   if jobTag == 'TimeSlotStart':
     if len(ec2InstanceList) > 0:
       print('Start EC2 instance: ' + str(ec2InstanceList))
       resourceController.startEc2Instace(ec2, ec2InstanceList)
+    if len(rdsInstanceList) > 0:
+      print('Start RDS instance: ' + str(rdsInstanceList))
+      resourceController.startRdsInstace(rds, rdsInstanceList)
   elif jobTag == 'TimeSlotStop':
     if len(ec2InstanceList) > 0:
       print('Stop EC2 instance: ' + str(ec2InstanceList))
       resourceController.stopEc2Instace(ec2, ec2InstanceList)
+    if len(rdsInstanceList) > 0:
+      print('Stop RDS instance: ' + str(rdsInstanceList))
+      resourceController.stopRdsInstace(rds, rdsInstanceList)
 
 # if __name__ == "__main__":
 #   lambda_handler({"job":"start"}, None)
