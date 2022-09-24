@@ -14,5 +14,4 @@ resource "aws_s3_object" "lambda_zip" {
   bucket = aws_s3_bucket.artifact.id
   key    = "lambda.zip"
   source = data.archive_file.zip.output_path
-  etag = filemd5(data.archive_file.zip.output_path)
 }
