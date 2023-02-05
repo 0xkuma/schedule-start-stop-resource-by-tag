@@ -28,7 +28,7 @@ def getCurrentHour():
     return hour
 
 
-def isProcessWeek(weekTag):
+def is_process_week(weekTag):
     #  Check if the resource should be processed in the current week
     for tag in weekTag:
         if tag['Key'] == 'Week':
@@ -84,7 +84,7 @@ def lambda_handler(event, context):
     ec2InstanceList = []
     rdsInstanceList = []
     for resource in resourceList:
-        if isProcessWeek(resource['Tags']):
+        if is_process_week(resource['Tags']):
             resourceArn = resource['ResourceARN']
             resourceType = resourceArn.split(':')[2]
             if resourceType == 'ec2':
