@@ -10,7 +10,6 @@ pipeline {
     stage('Clean up') {
       steps {
           cleanWS()
-          env.reset()
       }
     }
     stage("Build") {
