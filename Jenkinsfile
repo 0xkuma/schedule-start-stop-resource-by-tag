@@ -10,10 +10,8 @@ pipeline {
     stage("Build") {
       steps {
         withAWS(credentials: "${CREDENTIALS_ID}", region: "${AWS_REGION}") {
-          sh "cd app"
-          sh "ls -la"
-          sh "pip3 install -r requirements.txt"
-          sh "zip -q -r ./code.zip ."
+          sh "pip3 install -r ./app/requirements.txt -t ./app"
+          sh "cd ./app && zip -q -r ../code.zip ."
           sh "aws s3 cp ./code.zip s3://eddie-terraform/schedule-start-stop-resource-by-tag/lambda/code.zip"
         }
       }
