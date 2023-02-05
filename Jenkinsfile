@@ -14,15 +14,15 @@ pipeline {
       }
     }
     stage("Build") {
-        steps {
-          withAWS(credentials: "${CREDENTIALS_ID}", region: "${AWS_REGION}") {
-            sh "cd app"
-            sh "ls -la"
-            sh "pip3 install -r requirements.txt -t ."
-            sh "zip -q -r ./code.zip ."
-            sh "aws s3 cp ./code.zip s3://eddie-terraform/schedule-start-stop-resource-by-tag/lambda/code.zip"
-          }
+      steps {
+        withAWS(credentials: "${CREDENTIALS_ID}", region: "${AWS_REGION}") {
+          sh "cd app"
+          sh "ls -la"
+          sh "pip3 install -r requirements.txt -t ."
+          sh "zip -q -r ./code.zip ."
+          sh "aws s3 cp ./code.zip s3://eddie-terraform/schedule-start-stop-resource-by-tag/lambda/code.zip"
         }
+      }
     }
     stage("Terraform Init") {
       steps {
