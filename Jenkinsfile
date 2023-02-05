@@ -16,6 +16,15 @@ pipeline {
       }
     }
 
+    stage("List Terraform Files") {
+      steps {
+        script {
+          terraformFiles = sh(returnStdout: true, script: "ls -al")
+          println("Terraform Files: ${terraformFiles}")
+        }
+      }
+    }
+
     stage("Terraform Plan") {
       steps {
         script {
