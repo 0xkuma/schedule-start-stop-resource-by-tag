@@ -7,6 +7,12 @@ pipeline {
   }
 
   stages {
+    stage('Clean up') {
+      steps {
+          cleanWS()
+          env.reset()
+      }
+    }
     stage("Build") {
         steps {
           withAWS(credentials: "${CREDENTIALS_ID}", region: "${AWS_REGION}") {
