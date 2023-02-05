@@ -3,7 +3,7 @@ resource "null_resource" "pre_build" {
     timestamp = timestamp()
   }
   provisioner "local-exec" {
-    command = "cd app/dist && rm -rf * && cp ../*.py . && pip3 install -r ../requirements.txt -t ."
+    command = "cd ./app/dist && rm -rf * && cp ../*.py . && pip3 install -r ../requirements.txt -t ."
   }
 }
 
