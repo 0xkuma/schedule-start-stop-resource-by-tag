@@ -1,5 +1,5 @@
 pipeline {
-  agent { label 'terraform-agent' }
+  agent { label 'terraform' }
 
   environment {
     AWS_REGION = "ap-northeast-1"
