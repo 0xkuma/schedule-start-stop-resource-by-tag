@@ -1,16 +1,11 @@
-variable "aws_region" {
-  type    = string
-  default = "us-east-1"
+variable "AWS_ACCESS_KEY" {
+  description = "The AWS Access Key for the account"
 }
 
-variable "aws_access_key_id" {
-  type    = string
+variable "AWS_SECRET_KEY" {
+  description = "The AWS Secret Key for the account"
 }
 
-variable "aws_secret_access_key" {
-  type    = string
-}
-
-variable "aws_session_token" {
-  type    = string
+variable "AWS_REGION" {
+  description = "The AWS Region for the deployment"
 }

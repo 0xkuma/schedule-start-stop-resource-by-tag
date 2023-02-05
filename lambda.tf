@@ -15,7 +15,7 @@ resource "aws_lambda_function" "schedule_start_stop_resource" {
   runtime       = "python3.8"
   timeout       = 300
   memory_size   = 2048
-  s3_bucket     = aws_s3_bucket.artifact.id
+  s3_bucket     = "eddie-tf-state"
   s3_key        = aws_s3_object.lambda_zip.key
   source_code_hash = data.archive_file.zip.output_base64sha256
   tags = {
