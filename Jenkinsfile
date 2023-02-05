@@ -7,11 +7,6 @@ pipeline {
   }
 
   stages {
-    stage('Clean up') {
-      steps {
-          cleanWs()
-      }
-    }
     stage("Build") {
       steps {
         withAWS(credentials: "${CREDENTIALS_ID}", region: "${AWS_REGION}") {
@@ -49,6 +44,11 @@ pipeline {
             println("Terraform Apply Output: ${terraformApply}")
           }
         }
+      }
+    }
+    stage('Clean up') {
+      steps {
+          cleanWs()
       }
     }
   }
