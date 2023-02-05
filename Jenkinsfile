@@ -10,8 +10,9 @@ pipeline {
     stage("Build") {
         steps {
           withAWS(credentials: "${CREDENTIALS_ID}", region: "${AWS_REGION}") {
-            sh "pip3 install -r ./app/requirements.txt -t ./app"
-            sh "zip -r ./code.zip ./app"
+            sh "cd ./app"
+            sh "pip3 install -r ./requirements.txt -t ."
+            sh "zip -q -r ./code.zip ."
             sh "aws s3 cp ./code.zip s3://eddie-terraform/schedule-start-stop-resource-by-tag/lambda/code.zip"
           }
         }
@@ -24,13 +25,6 @@ pipeline {
         }
       }
     }
-
-    stage("List Terraform Files") {
-      steps {
-          sh "ls -la"
-      }
-    }
-
     stage("Terraform Plan") {
       steps {
         script {
@@ -41,7 +35,6 @@ pipeline {
         }
       }
     }
-
     stage("Terraform Apply") {
       steps {
         withAWS(credentials: "${CREDENTIALS_ID}", region: "${AWS_REGION}") {
