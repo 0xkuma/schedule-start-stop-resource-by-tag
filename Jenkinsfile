@@ -7,6 +7,15 @@ pipeline {
   }
 
   stages {
+    stage("Build") {
+        withAWS(credentials: "${CREDENTIALS_ID}", region: "${AWS_REGION}") {
+          steps {
+            sh "pip3 install -r ./app/requirements.txt -t ./app"
+            sh "zip -r ./code.zip ./app"
+            sh "aws s3 cp ./code.zip s3://eddie-terraform/schedule-start-stop-resource-by-tag/lambda/code.zip"
+          }
+        }
+    }
     stage("Terraform Init") {
       steps {
         script {

@@ -10,8 +10,8 @@
 #   acl    = "private"
 # }
 
-resource "aws_s3_object" "lambda_zip" {
-  bucket = "eddie-tf-state"
-  key    = "schedule-start-stop-resource-by-tag/lambda.zip"
-  source = data.archive_file.zip.output_path
-}
+# resource "aws_s3_object" "lambda_zip" {
+#   bucket = "eddie-terraform"
+#   key    = "schedule-start-stop-resource-by-tag/lambda.zip"
+#   source = data.archive_file.zip.output_path
+# }
