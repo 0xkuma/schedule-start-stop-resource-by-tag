@@ -8,7 +8,7 @@ terraform {
 
   backend "s3" {
     bucket = "eddie-terraform"
-    key    = "schedule-start-stop-resource-by-tag/terraform-state"
+    key    = "schedule-start-stop-resource-by-tag/terraform-state/terraform.state"
     region = "ap-northeast-1"
   }
 }
