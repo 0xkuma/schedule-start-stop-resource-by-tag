@@ -5,6 +5,12 @@ terraform {
       version = "~> 4.0"
     }
   }
+
+  backend "s3" {
+    bucket = "eddie-terraform"
+    key    = "schedule-start-stop-resource-by-tag/terraform-state"
+    region = "ap-northeast-1"
+  }
 }
 
 # provider "aws" {
